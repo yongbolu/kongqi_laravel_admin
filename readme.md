@@ -385,6 +385,21 @@ http://www.heibaiketang.com/blog
 ...
 其他待续分享
 
+### 系统截图
+系统演示
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/1.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/2.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/3.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/4.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/5.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/6.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/7.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/8.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/9.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/10.png)
+![系统演示](https://kqimage.oss-cn-shenzhen.aliyuncs.com/laraveladmin/11.png)
+
+
 ## 贡献
 
 感谢laravel,Layui,Jquery
