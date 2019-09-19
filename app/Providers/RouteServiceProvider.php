@@ -41,11 +41,16 @@ class RouteServiceProvider extends ServiceProvider
         //后台路由
         $this->mapWebAdminRoutes();
         //如果数据库没有配置，忽略下面加载，避免报错
-        if(env('DB_DATABASE'))
-        {
+        try{
             //插件路由
             $this->mapPluginRoutes();
+        }catch (\Exception $exception)
+
+        {
+
         }
+
+
 
 
     }
