@@ -61,6 +61,7 @@
                 'title'=>'角色',
                 'tips'=>'',
                 'rq'=>'rq',
+                'on_id'=>'',
                 'list'=>[
                     'type'=>'',
                     'data'=>$role??[]

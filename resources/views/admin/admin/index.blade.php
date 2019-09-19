@@ -19,7 +19,9 @@
                 , {field: 'thumb', title: '头像', width: 100, templet: '#tpl-user-thumb'}
                 , {field: 'nickname', title: '昵称', edit: 1}
                 , {field: 'account', title: '账号', edit: 1}
-                , {field: 'roles_name', title: '角色'}
+                , {field: 'roles_name', title: '角色',templet:function(d){
+                        return d.roles_arr.join(',');
+                    }}
                 , {
                     field: 'is_checked', title: '状态', templet: function (d) {
                         return layui_switch('is_checked', d)

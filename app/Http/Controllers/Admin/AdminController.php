@@ -95,6 +95,11 @@ class AdminController extends BaseDefaultController
         }
 
     }
+    public function apiJsonItemExtend($item)
+    {
+       $item->roles_arr=$item->roles->pluck('cn_name')->toArray();
+       return $item;
+    }
 
     public function password()
     {

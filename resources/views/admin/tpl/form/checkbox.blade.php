@@ -3,7 +3,8 @@
     <div class="layui-input-block">
         @if(!empty($data['list']))
             @foreach ($data['list']['data'] as $v)
-                <input {{ $data['on_id']==$v['id']?'checked':'' }}
+
+                <input {{ is_array($data['on_id'])?in_array($v['id'],$data['on_id'])?"checked":"":$data['on_id']==$v['id']?'checked':'' }}
                        type="checkbox" name="{{ $data['name'] }}[]"
                        data-min="{{ $data['min']??1 }}"
                        lay-filter="{{ $data['filter']??'' }}"

@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="{{ ___('/admin/modules/treetable-lay/treetable.css') }}">
 @endsection
 @section('content')
-    <a href="javascript:void(0)" class="layui-btn js-refrest">刷新渲染</a>
+
     @include('admin.'.$controller_base_lower.'.form')
     @include('admin.layout.table')
 @endsection

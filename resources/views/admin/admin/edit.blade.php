@@ -61,6 +61,7 @@
             'name'=>'roles',
             'title'=>'角色',
             'tips'=>'',
+            'on_id'=>$show->roles->pluck('id')->toArray(),
             'rq'=>'rq',
             'list'=>[
                 'type'=>'',

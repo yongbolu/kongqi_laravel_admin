@@ -83,6 +83,9 @@ http://www.xx.com/admin
 
 安装完成
 
+### 插件库地址
+https://github.com/kong-qi/kongqi-laravel-admin-plugin
+
 ## 文件说明
 除了本身是laravel框架的文件，就不说明了。自行查阅文档
 
@@ -324,6 +327,25 @@ function plugin_res($path)
 }
 其他的自行查阅
 ```
+### 路由前缀命名说明
+>route/admin.php
+```
+默认前缀是"admin."
+例如管理员
+admin.admin.index
+
+```
+> 插件路由命名
+```
+admin.plugin.vote.vote.index
+admin.plugin.这个是固定，vote是插件名字，后面才是控制器对应的路由名字
+```
+> 插件前端命名
+```
+plugin.vote.vote.index
+plugin.是固定形式前缀。vote是插件名字，后面才是控制器对应的路由名字
+```
+
 ### 前端Layui模块位置
 ```
 \public\static\admin\modules\，所有的模块默认在这里，
