@@ -6,7 +6,7 @@
 QQ:531833998  
 QQ群：650547109  欢迎交流，也欢迎定制系统，全职在家提供技术。
 
-演示地址 http://laravel.kongqikeji.com
+演示地址 http://laravel.kongqikeji.com/admin
 
 
 ## 关于后台管理系统

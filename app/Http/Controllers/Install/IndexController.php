@@ -200,13 +200,8 @@ EOT;
                 'title' => '可写',
                 'icon' => 'layui-icon-ok',
             ],
+
             '1' => [
-                'type' => 'dir',
-                'path' => public_path() . '/upload/',
-                'title' => '可写',
-                'icon' => 'layui-icon-ok',
-            ],
-            '2' => [
                 'type' => 'dir',
                 'path' => base_path() . '/.env',
                 'title' => '可写',
