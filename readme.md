@@ -324,6 +324,27 @@ function plugin_res($path)
 }
 其他的自行查阅
 ```
+### 前端Layui模块位置
+```
+\public\static\admin\modules\，所有的模块默认在这里，
+引入的时候，都需要先调用index这个模块
+
+layui.use(['index'], function () {
+
+
+
+ })
+ 
+ 
+```
+> 重点模块我进行了封装
+```
+custorm.js 自定义JS内容
+treetable.js 进行更改过
+layerOpen.js 弹窗模块
+uploader.js 上传模块
+request.js 请求模块ajax
+```
 ### 后续会出视频教程，待续。先分享再说。
 
 ### QQ群交流
@@ -334,6 +355,13 @@ function plugin_res($path)
 
 ### 关于我
 12年毕业，7年开发经验，10年接触编程，全职在家做技术支持。
+
+简书主页
+https://www.jianshu.com/u/fe36c46ae4d8  
+黑白课堂
+http://www.heibaiketang.com/blog  
+...
+其他待续分享
 
 ## 贡献
 
