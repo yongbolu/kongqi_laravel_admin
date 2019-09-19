@@ -131,6 +131,7 @@ DEBUGBAR_ENABLED=false
 http://www.xx.com/admin
 
 ```
+在第三步的时候，如果出现没有提示，请再次输入即可。
 
 安装完成
 

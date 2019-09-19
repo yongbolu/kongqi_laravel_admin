@@ -145,10 +145,7 @@
         layui.use(['layer', 'form'], function () {
             var form = layui.form;
             //监听提交
-            form.on('submit(setDb)', function (data) {
-               console.log(data.field);
-                return true;
-            });
+
         })
     </script>
 
