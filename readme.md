@@ -39,9 +39,9 @@ composer install
 
 第三步：创建一个数据库，utf8mb4字符集
 
-第五步：本地创建网站应用，绑定到网站目录/public下
+第四步：本地创建网站应用，绑定到网站目录/public下
 
-第六步：重写
+第五步：重写
 nginx 重写
 ```
 location / {
@@ -75,7 +75,7 @@ apache 重写,默认public已经有了，可忽略
 </IfModule>
 
 ```
-第7步拷贝您的.env,或者新建一个，内容如下
+第六步拷贝您的.env,或者新建一个，内容如下
 ```
 APP_NAME=Laravel
 APP_ENV=local
@@ -126,12 +126,12 @@ DEBUGBAR_ENABLED=false
 
 ```
 
-第八步:打开你的网站/admin/即可，自动判断进行安装
+第七步:打开你的网站/admin/即可，自动判断进行安装
 ```
 http://www.xx.com/admin
 
 ```
-在第三步的时候，如果出现没有提示，请再次输入即可。
+在线安装在第三步的时候，如果出现没有提示，请再次输入即可。
 
 安装完成
 
