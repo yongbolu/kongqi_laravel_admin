@@ -140,6 +140,9 @@ http://www.xx.com/admin
 ### 插件库地址
 https://github.com/kong-qi/kongqi-laravel-admin-plugin
 
+### 无插件版本，精简版本
+https://github.com/kong-qi/kongqi_laravel_admin_no_plugin.git ，其他都一样去除了插件加载
+
 ## 文件说明
 除了本身是laravel框架的文件，就不说明了。自行查阅文档
 
