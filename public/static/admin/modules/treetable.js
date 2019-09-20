@@ -5,9 +5,10 @@ layui.define(['layer', 'request', 'table','listTable','layerOpen'], function (ex
     var table = layui.table;
     var listTable=layui.listTable;
 
-   /* layui.use(['listTable'], function(){
-        listTable=layui.listTable;
-    })*/
+    /* layui.use(['listTable'], function(){
+         listTable=layui.listTable;
+     })*/
+    var has_hander=0;
 
 
     var treetable = {
@@ -135,13 +136,18 @@ layui.define(['layer', 'request', 'table','listTable','layerOpen'], function (ex
             // 渲染表格
             table.render(param);
             var that=this;
-            //执行事件/顶部事件
-            listTable.handle('', function(res){
-                that.reload(that,res)
-            });
-            listTable.top(function(res){
-                that.reload(that,res)
-            });
+            if(has_hander==0)
+            {
+                //执行事件/顶部事件
+                listTable.handle('', function(res){
+                    that.reload(that,res)
+                });
+                listTable.top(function(res){
+                    that.reload(that,res)
+                });
+            }
+
+            has_hander=1;
 
         },
         // 计算缩进的数量
