@@ -48,7 +48,7 @@
         </li>
         <li class="layui-nav-item" lay-unselect>
             <a href="javascript:;">
-                <cite>{{ admin('realname') }}</cite>
+                <cite>{{ admin('account') }}</cite>
             </a>
             <dl class="layui-nav-child">
 
