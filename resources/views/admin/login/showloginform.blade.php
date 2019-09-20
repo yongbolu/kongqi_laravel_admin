@@ -79,6 +79,8 @@
                 request.post(postLoginUrl, obj.field, function (res) {
                     if (res.code != 200) {
                         layer.msg(res.msg, {icon: 5, shift: 6});
+                        //刷新验证码
+                        $("#LAY-user-get-vercode").click();
                     }else
                     {
                         layer.msg(res.msg, {icon: 1, shift: 6});
