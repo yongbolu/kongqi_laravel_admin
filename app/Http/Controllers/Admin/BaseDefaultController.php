@@ -272,7 +272,12 @@ class BaseDefaultController extends BaseController
 
             return $this->returnErrorApi('没有选择数据');
         }
-
+        //j检验删除是否通过
+        $error=$this->checkDelet($id_arr);
+        if($error)
+        {
+            return $this->returnErrorApi($error);
+        }
         $r = $this->model->whereIn($type_id, $id_arr)->delete();
         if ($r) {
             $this->insertLog($this->pageName . '成功删除ids：' . implode(',', $id_arr));
@@ -280,6 +285,14 @@ class BaseDefaultController extends BaseController
         }
         $this->insertLog($this->pageName . '删除失败ids：' . implode(',', $id_arr));
         return $this->returnErrorApi('删除失败');
+    }
+
+
+    /**
+     * 检查是否存在错误，直接返回错误字符串
+     */
+    public function checkDelet($id_arr){
+
     }
 
     /**
