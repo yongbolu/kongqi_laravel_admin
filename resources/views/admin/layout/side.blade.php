@@ -29,13 +29,13 @@
                     @if(show_hide_menu_auth($item['limit']))
                         <li data-name="{{ $item['name'] }}" class="layui-nav-item ">
                             @if($item['router'])
-                            <a lay-href="{{ $item['router']?route($item['router'],isset($item['param'])?$item['param']:[]):'javascript:void(0)' }}"
+                            <a lay-href="{{ $item['router']?nroute($item['router'],isset($item['param'])?$item['param']:[]):'javascript:void(0)' }}"
                                lay-tips="{{ $item['name'] }}" lay-direction="2">
                                 <i class="{{ $item['icon'] }}"></i>
                                 <cite>{{ $item['name'] }}</cite>
                             </a>
                             @else
-                                <a href="{{ $item['router']?route($item['router'],isset($item['param'])?$item['param']:[]):'javascript:void(0)' }}"
+                                <a href="{{ $item['router']?nroute($item['router'],isset($item['param'])?$item['param']:[]):'javascript:void(0)' }}"
                                    lay-tips="{{ $item['name'] }}" lay-direction="2">
                                     <i class="{{ $item['icon'] }}"></i>
                                     <cite>{{ $item['name'] }}</cite>
@@ -52,7 +52,7 @@
 
 
                                                 <dd data-name="{{ $sub_v['title'] }}">
-                                                    <a lay-href="{{ route($sub_v['router'],isset($sub_v['param'])?$sub_v['param']:[]) }}">
+                                                    <a lay-href="{{ nroute($sub_v['router'],isset($sub_v['param'])?$sub_v['param']:[]) }}">
                                                         <i class="{{ $sub_v['icon'] }}"></i> {{ $sub_v['title'] }}</a>
                                                 </dd>
 

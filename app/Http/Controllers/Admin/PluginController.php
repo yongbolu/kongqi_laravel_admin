@@ -57,39 +57,43 @@ class PluginController extends BaseDefaultController
 
         if (!$item->is_install) {
             $btns[] = [
-                'post_url' => action($this->routeInfo['controller'] . '@install', ['ename' => $item->ename,'type'=>'install']),
+                'post_url' => action($this->routeInfo['controller'] . '@install', ['ename' => $item->ename, 'type' => 'install']),
                 'name' => '安装',
                 'title' => '确定进行安装？',
                 'class_name' => 'layui-btn-green',
 
             ];
         }
-        if($item->is_install)
-        {
+        if ($item->is_install) {
             $btns[] = [
-                'post_url' => action($this->routeInfo['controller'] . '@install', ['ename' => $item->ename,'type'=>'remove']),
+                'post_url' => action($this->routeInfo['controller'] . '@install', ['ename' => $item->ename, 'type' => 'remove']),
                 'name' => '卸载',
                 'title' => '将会删除数据表,确定进行卸载吗？',
                 'class_name' => 'layui-btn-danger',
 
             ];
+            $btns[] = [
+                'post_url' => action($this->routeInfo['controller'] . '@install', ['ename' => $item->ename, 'type' => 'config']),
+                'name' => '重新配置',
+                'title' => '确定进行重新安装配置文件吗？',
+                'class_name' => 'layui-btn-green',
+
+            ];
         }
-        $btn_links=[];
-        if($item->menu_show==2 && $item->install)
-        {
-            $btn_links[]=
+        $btn_links = [];
+        if ($item->menu_show == 2 && $item->install) {
+            $btn_links[] =
                 [
                     'url' => route('admin.home.plugin', ['ename' => $item->ename]),
                     'name' => '进入管理',
                     'title' => '',
                     'class_name' => 'layui-btn-success',
-                    'target'=>'_blank'
+                    'target' => '_blank'
 
-                ]
-            ;
+                ];
         }
-        $item['btns']=$btn_links;
-        $item['show_url']=action($this->routeInfo['controller'].'@show',['id'=>$item->id]);
+        $item['btns'] = $btn_links;
+        $item['show_url'] = action($this->routeInfo['controller'] . '@show', ['id' => $item->id]);
 
         $item->btn_posts = $btns;
         $item->no_edit_btn = 1;
@@ -101,7 +105,8 @@ class PluginController extends BaseDefaultController
      * @param $field
      * @param $ids
      */
-    public function editTableAfterSuccess($field,$ids){
+    public function editTableAfterSuccess($field, $ids)
+    {
         //更新缓存
         plugin_cache_forever_update();
     }
@@ -110,63 +115,94 @@ class PluginController extends BaseDefaultController
     {
         $plugin = $this->model->where('ename', $ename)->first();
         set_time_limit(60 * 20);
-        switch ($type) {
-            case 'install':
-                //20分钟超时
+        try{
+            switch ($type) {
+                case 'install':
+                    //20分钟超时
 
+                    //写入到安装数组里面
+                    $plugin_path = get_plugin_path();
 
-                //写入到安装数组里面
-                $plugin_path = get_plugin_path();
+                    if ($plugin->is_install) {
+                        return $this->returnErrorApi('已经安装过了');
+                    }
+                    //数据库里面没有执行过安装迁移，进行安装
+                    if (!$plugin->db_migrate) {
 
-                if ($plugin->is_install) {
-                    return $this->returnErrorApi('已经安装过了');
-                }
-                //数据库里面没有执行过安装迁移，进行安装
-                if (!$plugin->db_migrate) {
-
+                        $ename = '\App\Plugin\\' . convert_under_line($ename) . '\\Migrations\\';
+                        $migrate_name = $ename . 'Install';
+                        $migrate = new $migrate_name();
+                        //执行安装数据库
+                        $migrate->up();
+                        //执行填充数据库
+                        $db_seed = $ename . 'Seed';
+                        $db_seed = new $db_seed();
+                        $db_seed->up();
+                    }
+                    $plugin->is_install = 1;
+                    $plugin->save();
+                    //
+                    plugin_cache_forever_update();
+                    return $this->returnOkApi('安装完成');
+                    break;
+                case 'remove':
+                    if (!$plugin->is_install) {
+                        return $this->returnErrorApi('还没安装无需卸载');
+                    }
                     $ename = '\App\Plugin\\' . convert_under_line($ename) . '\\Migrations\\';
-                    $migrate_name = $ename . 'Install';
+                    $migrate_name = $ename . 'Remove';
                     $migrate = new $migrate_name();
-                    //执行安装数据库
                     $migrate->up();
-                    //执行填充数据库
-                    $db_seed = $ename . 'Seed';
-                    $db_seed = new $db_seed();
-                    $db_seed->up();
-                }
-                $plugin->is_install=1;
-                $plugin->save();
-                //
-                plugin_cache_forever_update();
-                return $this->returnOkApi('安装完成');
-                break;
-            case 'remove':
-                if (!$plugin->is_install) {
-                    return $this->returnErrorApi('还没安装无需卸载');
-                }
-                $ename = '\App\Plugin\\' . convert_under_line($ename) . '\\Migrations\\';
-                $migrate_name = $ename . 'Remove';
-                $migrate = new $migrate_name();
-                $migrate->up();
-                $plugin->is_install=0;
-                $plugin->save();
-                return $this->returnOkApi('卸载安装完成');
-                plugin_cache_forever_update();
-                break;
-            case 'update':
-                if (!$plugin->is_install) {
-                    return $this->returnErrorApi('还没安装无需卸载');
-                }
-                $ename = '\App\Plugin\\' . convert_under_line($ename) . '\\Migrations\\';
-                $migrate_name = $ename . 'Update';
-                $migrate = new $migrate_name();
-                $migrate->up();
-                $plugin->is_install=0;
-                $plugin->save();
-                plugin_cache_forever_update();
-                return $this->returnOkApi('更新完成');
-                break;
+                    $plugin->is_install = 0;
+                    $plugin->save();
+                    return $this->returnOkApi('卸载安装完成');
+                    plugin_cache_forever_update();
+                    break;
+                case 'update':
+                    if (!$plugin->is_install) {
+                        return $this->returnErrorApi('还没安装无需卸载');
+                    }
+                    $ename = '\App\Plugin\\' . convert_under_line($ename) . '\\Migrations\\';
+                    $migrate_name = $ename . 'Update';
+                    $migrate = new $migrate_name();
+                    $migrate->up();
+                    $plugin->is_install = 0;
+                    $plugin->save();
+                    plugin_cache_forever_update();
+                    return $this->returnOkApi('更新完成');
+                    break;
+                case 'config':
+                    $plugin_path = get_plugin_path();
+                    $plugin_config_file = $plugin_path . $plugin['ename'] . '/config.php';
+
+                    if (file_exists($plugin_config_file)) {
+                        //进行导入
+                        $plugin_info = require_once $plugin_config_file;
+
+                        if (is_array($plugin_info)) {
+                            //进行写入数据库
+                            $plugin_info['admin_menu'] = serialize(json_encode($plugin_info['admin_menu']));
+                            $plugin_info['thumbs'] = urlencode(json_encode($plugin_info['thumbs']));
+
+                            //进行添加写入
+                            $model = $plugin;
+                            $model = $this->setDbKeyValue($plugin, $plugin_info);
+                            $model->is_install=1;
+                            $r=$model->save();
+                            if($r)
+                            {
+                                return $this->returnOkApi('更新完成');
+                            }
+                            return $this->returnErrorApi('更新完成失败');
+                        }
+                    }
+                    break;
+            }
+        }catch (\Exception $exception)
+        {
+            return $this->returnErrorApi('失败'.$exception->getMessage());
         }
+
 
     }
 }
