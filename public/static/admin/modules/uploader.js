@@ -271,9 +271,9 @@ layui.define(['upload', 'laypage', 'form', 'laydate', 'layerOpen', 'layer'], fun
             var parentObj = $(obj).parents(".upload-tuku-area");
 
             var html = '<div class="item layui-col-xs6 layui-col-sm3 layui-col-md2 tupload-item upload-item-more ">' +
-                ' <img data-type="' + res.type + '" data-view_src="' + res.view_src + '" data-oss="' + res.oss_type + '" data-ext="' + res.ext + '" data-tmpname="' + res.tmpname + '" data-src="' + res.path + '" src="' + res.view_src + '" class="upload-item-pic" alt=""> ' +
+                ' <img data-type="' + res.type + '" data-view_src="' + res.view_src + '" data-oss="' + res.oss_type + '" data-ext="' + res.ext + '" data-tmpname="' + res.tmpname + '" data-path="' + res.path + '" src="' + res.view_src + '" class="upload-item-pic" alt=""> ' +
                 '<div class="item-foot-tools">' +res.tmpname+
-                 '</div> ' +
+                '</div> ' +
                 '</div>';
             //插入数据
             parentObj.find(".upload-tuku-list").prepend(html);
