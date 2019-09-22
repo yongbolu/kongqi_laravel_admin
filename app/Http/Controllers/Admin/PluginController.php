@@ -191,6 +191,7 @@ class PluginController extends BaseDefaultController
                             $r=$model->save();
                             if($r)
                             {
+                                plugin_cache_forever_update();
                                 return $this->returnOkApi('更新完成');
                             }
                             return $this->returnErrorApi('更新完成失败');
