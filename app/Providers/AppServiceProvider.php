@@ -15,17 +15,31 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
         $relation=[
             'admin' => 'App\Models\Admin'
         ];
-        $plugin_path=get_plugin_path();
-        $plugin_path_dir =get_dir($plugin_path,0);
-        if(!empty($plugin_path_dir))
+        //取得安装插件
+        $plugin=get_plugins_data();
+
+        //取得插件目录
+        $plugin_path = get_plugin_path();
+
+        if(!empty($plugin))
         {
 
-            foreach ($plugin_path_dir as $k=>$v) {
+            foreach ($plugin as $k=>$v) {
 
-                $route_path = $plugin_path . $v . '/relation.php';
+                $route_path = $plugin_path . $v['ename'] . '/relation.php';
 
                 if(file_exists($route_path))
                 {
@@ -42,16 +56,6 @@ class AppServiceProvider extends ServiceProvider
 
         //注册关系
         Relation::morphMap($relation);
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
 
     }
 }
