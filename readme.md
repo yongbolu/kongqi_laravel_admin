@@ -10,7 +10,19 @@ QQ群：650547109  欢迎交流，也欢迎定制系统，全职在家提供技�
 账号:kongqi
 密码:kongqi1688
 
+### 更新日志
+- 2019-09-23 增加插件注册 Relation::morphMap关系
+插件目录下，创建1个relation.php，键值对写完即可
+```
+<?php
 
+//这里写键值对morphMap的使用
+return [
+    'plugin_website_case' => 'App\Plugin\Website\Models\PluginWebCase',
+    'plugin_website_article' => 'App\Plugin\Website\Models\PluginWebArticle'
+];
+?>
+```
 ## 关于后台管理系统
 
 利用laravel框架，打造一款快速开发后台操作，内置了RBAC权限管理，集成了列表api,批量删除，批量增加，Excel批量导入，排序，列表编辑，图片上传，图片多图上传，编辑器，插件安装等。
