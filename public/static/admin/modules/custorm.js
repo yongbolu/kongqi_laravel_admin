@@ -61,7 +61,8 @@ layui.define(['layer', 'admin', 'layerOpen', 'uploader', 'laydate','colorpicker'
         //标识符为选择
 
         colorpicker.render({
-            elem: color_obj
+            elem: color_obj,
+            color:othis.val()
             ,done: function(color){
                 othis.val(color);
 
