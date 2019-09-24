@@ -417,7 +417,7 @@ trait ModelCurlTrait
         }
         $r = $this->getModel()->insert($post_data);
         if ($r) {
-
+            $this->afterAllCreateEvent();
             $this->insertLog('批量插入成功');
             return $this->returnOkApi($this->pageName . '批量插入成功');
         }
@@ -542,5 +542,13 @@ trait ModelCurlTrait
 
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
+    }
+    /**
+     * 批量添加成功之后的事件
+     * 比如更新缓存操作
+     */
+    public function afterAllCreateEvent()
+    {
+
     }
 }

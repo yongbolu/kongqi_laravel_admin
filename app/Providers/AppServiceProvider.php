@@ -57,5 +57,8 @@ class AppServiceProvider extends ServiceProvider
         //注册关系
         Relation::morphMap($relation);
 
+        //注册验证手机规则
+        Validator::extend('mobile', 'App\Rules\Mobile@passes');
+
     }
 }
