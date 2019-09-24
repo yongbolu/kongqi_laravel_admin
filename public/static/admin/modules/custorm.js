@@ -1,10 +1,11 @@
-layui.define(['layer', 'admin', 'layerOpen', 'uploader', 'laydate'], function (exports) {
+layui.define(['layer', 'admin', 'layerOpen', 'uploader', 'laydate','colorpicker'], function (exports) {
     var $ = layui.$;
     var uploader = layui.uploader;
     var admin = layui.admin;
     var custorm = {};
     var layerOpen = layui.layerOpen;
     var laydate = layui.laydate;
+    var colorpicker = layui.colorpicker;
 
     //卡片伸缩
     collapse();
@@ -51,6 +52,28 @@ layui.define(['layer', 'admin', 'layerOpen', 'uploader', 'laydate'], function (e
             uploader.more(objName);
         })
     }
+
+    //颜色选择器
+    $('[kq-event="color"]').each(function () {
+        //
+        othis = $(this);
+        var color_obj=othis.data('color_obj');
+        //标识符为选择
+
+        colorpicker.render({
+            elem: color_obj
+            ,done: function(color){
+                othis.val(color);
+
+            },
+            change: function(color){
+                othis.val(color);
+
+            }
+        });
+
+
+    });
 
     $('[kq-event="date"]').each(function () {
 
