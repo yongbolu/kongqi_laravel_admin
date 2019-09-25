@@ -547,3 +547,67 @@ function plugin_cache_forever_update(){
     cache()->forever($plugin_key,$data);
 
 }
+
+/**
+ * @param $data
+ * @param $parent_id
+ * @return array
+ * option 树形
+ */
+function get_tree_option($data, $parent_id)
+{
+    $stack = [$parent_id];
+    $child = [];
+    $added = [];
+    $options = [];
+    $obj = [];
+    $loop = 0;
+    $depth = -1;
+    foreach ($data as $node) {
+        $pid = $node['parent_id'];
+        if (!isset($child[$pid])) {
+            $child[$pid] = [];
+        }
+        array_push($child[$pid], $node['id']);
+        $obj[$node['id']] = $node;
+    }
+
+    while (count($stack) > 0) {
+        $id = $stack[0];
+        $flag = false;
+        $node = isset($obj[$id]) ? $obj[$id] : null;
+        if (isset($child[$id])) {
+            for ($i = count($child[$id]) - 1; $i >= 0; $i--) {
+                array_unshift($stack, $child[$id][$i]);
+            }
+            $flag = true;
+        }
+        if ($id != $parent_id && $node && !isset($added[$id])) {
+            $node['depth'] = $depth;
+            $options[] = $node;
+            $added[$id] = true;
+        }
+        if ($flag == true) {
+            $depth++;
+        } else {
+            if ($node) {
+                for ($i = count($child[$node['parent_id']]) - 1; $i >= 0; $i--) {
+                    if ($child[$node['parent_id']][$i] == $id) {
+                        array_splice($child[$node['parent_id']], $i, 1);
+                        break;
+                    }
+                }
+                if (count($child[$node['parent_id']]) == 0) {
+                    $child[$node['parent_id']] = null;
+                    $depth--;
+                }
+            }
+            array_shift($stack);
+        }
+        $loop++;
+        if ($loop > 5000) return $options;
+    }
+    unset($child);
+    unset($obj);
+    return $options;
+}
