@@ -23,7 +23,7 @@
                 @if($item['is_hide']!=1)
                     {{ $item['router'] }}
                     @if(show_hide_menu_auth($item['limit']))
-                        <li data-name="{{ $item['name'] }}" class="layui-nav-item ">
+                        <li data-name="{{ $item['name'] }}" class="layui-nav-item layui-nav-itemed">
                             @if($item['router'])
                                 <a lay-href="{{ $item['router']?nroute($item['router'],isset($item['param'])?$item['param']:[]):'javascript:void(0)' }}"
                                    lay-tips="{{ $item['name'] }}" lay-direction="2">

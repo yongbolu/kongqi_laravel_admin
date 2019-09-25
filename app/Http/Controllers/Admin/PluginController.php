@@ -15,8 +15,11 @@ class PluginController extends BaseDefaultController
         $plugin = Plugin::pluck('ename')->toArray();
         //检索插件目录
         $plugin_dir_arr = get_plugin_path_arr();
+
         //进行比较，取出不在数据库里面的
         $plugin_no_db = array_diff($plugin_dir_arr, $plugin);
+
+
 
         if (!empty($plugin_no_db)) {
             foreach ($plugin_no_db as $k => $v) {
@@ -81,7 +84,8 @@ class PluginController extends BaseDefaultController
             ];
         }
         $btn_links = [];
-        if ($item->menu_show == 2 && $item->install) {
+
+        if ($item->menu_show == 2 && $item->is_install==1) {
             $btn_links[] =
                 [
                     'url' => route('admin.home.plugin', ['ename' => $item->ename]),
@@ -186,7 +190,7 @@ class PluginController extends BaseDefaultController
 
                             //进行添加写入
                             $model = $plugin;
-                            $model = $this->setDbKeyValue($plugin, $plugin_info);
+                            $model = $this->setDbKeyValue($model, $plugin_info);
                             $model->is_install=1;
                             $r=$model->save();
                             if($r)
