@@ -11,6 +11,7 @@ Route::prefix($admin_path)->middleware(['install'])->name('admin.')->group(funct
 /*****************验证中间件**********************/
 Route::prefix($admin_path)->middleware(['install', 'admin_auth', 'admin_check'])->name('admin.')->group(function ($route) {
     $route->get('home', 'HomeController@console')->name('home.console');
+    $route->get('clear/cache', 'HomeController@clearCache')->name('home.clear.cache');
     $route->get('/', 'HomeController@index')->name('home');
     $route->get('/admin_plugin/{ename}', 'HomeController@plugin')->name('home.plugin');
 
