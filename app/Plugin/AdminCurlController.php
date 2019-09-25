@@ -60,6 +60,7 @@ class AdminCurlController extends AdminBaseController
         view()->share('show', $show);
         return $this->display($this->createEditData($show) ?: []);
     }
+
     /**
      * 404页面
      */
@@ -67,6 +68,7 @@ class AdminCurlController extends AdminBaseController
     {
         return abort(404, $message);
     }
+
     /**
      * POST更新
      * @param Request $request
@@ -113,6 +115,28 @@ class AdminCurlController extends AdminBaseController
     public function getSearchModel($data)
     {
         $model = $this->getModel()->getSearchModel($this->model, $data, $this->timeType);
+        $model = $this->addSearchModel($model, $data, $this->timeType);
+        return $model;
+    }
+
+    /**
+     * 插件搜索附加
+     * @param $model
+     * @param $data
+     * @param $type
+     * @return mixed
+     * 例如插件目录下新建一个目录/Vote/Services/SearchService ，然后继承插件根下的Service/SearchBaseService
+     * 比如我的后台需要附加搜索添加，则实例话如下
+     *  //新增搜索
+     * public function addSearchModel($model, $data,$type)
+     * {
+     * $model=new SearchService($model,$data,$type);
+     * $model=$model->returnModel();
+     * return $model;
+     * }
+     */
+    public function addSearchModel($model, $data, $type)
+    {
         return $model;
     }
 
@@ -266,6 +290,14 @@ class AdminCurlController extends AdminBaseController
     }
 
     /**
+     * 检查是否存在错误，直接返回错误字符串
+     */
+    public function checkDelet($id_arr)
+    {
+
+    }
+
+    /**
      * 删除
      * @param $id
      * @return array|\Illuminate\Http\JsonResponse
@@ -282,12 +314,11 @@ class AdminCurlController extends AdminBaseController
 
             return $this->returnErrorApi('没有选择数据');
         }
-        //j检验删除是否通过
-        $error=$this->checkDelet($id_arr);
-        if($error)
-        {
+        $error = $this->checkDelet($id_arr);
+        if ($error) {
             return $this->returnErrorApi($error);
         }
+
         $r = $this->model->whereIn($type_id, $id_arr)->delete();
         if ($r) {
             $this->insertLog($this->pageName . '成功删除ids：' . implode(',', $id_arr));
@@ -295,14 +326,6 @@ class AdminCurlController extends AdminBaseController
         }
         $this->insertLog($this->pageName . '删除失败ids：' . implode(',', $id_arr));
         return $this->returnErrorApi('删除失败');
-    }
-
-
-    /**
-     * 检查是否存在错误，直接返回错误字符串
-     */
-    public function checkDelet($id_arr){
-
     }
 
     /**
@@ -328,7 +351,7 @@ class AdminCurlController extends AdminBaseController
         $r = $this->model->whereIn($id, $id_arr)->update([$field => $value]);
 
         if ($r) {
-            $this->editTableAfterSuccess($field,$id_arr);
+            $this->editTableAfterSuccess($field, $id_arr);
             $this->insertLog($this->pageName . '修改成功ids：' . implode(',', $id_arr));
             return $this->returnOkApi('修改成功');
         }
@@ -341,7 +364,8 @@ class AdminCurlController extends AdminBaseController
      * @param $field
      * @param $ids
      */
-    public function editTableAfterSuccess($field,$ids){
+    public function editTableAfterSuccess($field, $ids)
+    {
 
     }
 

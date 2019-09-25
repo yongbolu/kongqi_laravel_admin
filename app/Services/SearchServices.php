@@ -80,12 +80,12 @@ class SearchServices
 
             $str = convert_under_line($k);
             $action = $this->wherePrefix . $str;
-           // dump($action);
+            // dump($action);
             if (method_exists($this, $action)) {
                 if ($v !== '' && $v !== NULL) {
                     //执行方法
 
-                    self::$action($v);
+                    $this->$action($v);
                 }
             }
         }
