@@ -224,6 +224,14 @@ class AdminCurlController extends AdminBaseController
     }
 
     /**
+     * 列表增加搜索地方
+     * @param $model
+     */
+    public function addListSearch($model){
+        return $model;
+    }
+
+    /**
      * 取得列表数据
      * @param Request $request
      * @return array|\Illuminate\Http\JsonResponse|string
@@ -243,7 +251,7 @@ class AdminCurlController extends AdminBaseController
             return $this->returnApi(200, '没有初始化模型', []);
         }
         $model = $this->getSearchModel($this->setSearchParam($request->all()));
-
+        $model=$this->addListSearch($model);
         $total = $model->count();
         //是否是否关联数据等操作
         $model = $this->setModelAddWhere($model);

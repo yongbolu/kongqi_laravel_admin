@@ -209,7 +209,7 @@ class BaseDefaultController extends BaseController
             return $this->returnApi(200, '没有初始化模型', []);
         }
         $model = $this->getSearchModel($this->setSearchParam($request->all()));
-
+        $model=$this->addListSearch($model);
         $total = $model->count();
         //是否是否关联数据等操作
         $model = $this->setModelAddWhere($model);
@@ -221,7 +221,13 @@ class BaseDefaultController extends BaseController
         $arr_data = $this->apiJsonData($result);
         return $this->listJsonFormat($total, $arr_data, $debug);
     }
-
+    /**
+     * 列表增加搜索地方
+     * @param $model
+     */
+    public function addListSearch($model){
+        return $model;
+    }
     /**
      * 列表输出JSON格式
      * @param $total
@@ -272,12 +278,7 @@ class BaseDefaultController extends BaseController
 
             return $this->returnErrorApi('没有选择数据');
         }
-        //j检验删除是否通过
-        $error=$this->checkDelet($id_arr);
-        if($error)
-        {
-            return $this->returnErrorApi($error);
-        }
+
         $r = $this->model->whereIn($type_id, $id_arr)->delete();
         if ($r) {
             $this->insertLog($this->pageName . '成功删除ids：' . implode(',', $id_arr));
@@ -285,14 +286,6 @@ class BaseDefaultController extends BaseController
         }
         $this->insertLog($this->pageName . '删除失败ids：' . implode(',', $id_arr));
         return $this->returnErrorApi('删除失败');
-    }
-
-
-    /**
-     * 检查是否存在错误，直接返回错误字符串
-     */
-    public function checkDelet($id_arr){
-
     }
 
     /**

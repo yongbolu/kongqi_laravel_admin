@@ -99,6 +99,13 @@
                 'value="' + d[field] + '" data-id="' + d.id + '"  data-field="' + field + '" ' + (d[field] == value ? 'checked' : '') + '>';
         }
 
+        function layui_pic(img){
+            if(img)
+            {
+                return ' <img lay-event="show_img" style="" src="'+img+'">';
+            }
+        }
+
         //回调函数设置label
         function layui_label(value, class_style) {
             var class_name = 'label-' + class_style;
@@ -118,5 +125,25 @@
 
 
         }
+        function layui_btn_show(title,url,type,classname,w,h){
+            switch (type) {
+                case 'open_layer':
+                    return '<a lay-tips="点击查看详情" href="javascript:void(0)" class="layui-btn layui-btn-xs '+(classname||'layui-btn-normal')+'" data-w="'+(w||'80%')+'" data-h="'+(h || '80%')+'" data-url="'+url+'" ' +
+                        'data-title="'+(title)+'" lay-event="open_layer">'+(title)+'</a>';
+                    break;
+                case 'link':
+                    return '<a class="layui-btn layui-btn-xs '+(classname||'layui-btn-normal')+'" href="'+url+'" >'+(title)+'</a>';
+                    break;
+            }
+
+
+        }
+        function layui_open_post(title,url,post,tips,w,h){
+            w=w || '100%';
+            h=h || '100%';
+            tips=tips || '操作';
+            return '<a href="javascript:void(0)" data-title="'+tips+'" lay-event="open_layer_post" class="layui-btn layui-btn-normal layui-btn-xs" data-post_url="'+post+'" data-url="'+url+'" data-w="'+w+'" data-h="'+h+'">'+title+'</a>'
+        }
+
     </script>
 @endverbatim
