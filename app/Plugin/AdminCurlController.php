@@ -157,7 +157,7 @@ class AdminCurlController extends AdminBaseController
      * @param $model
      * @return mixed
      */
-    public function setModelAddWhere($model)
+    public function setModelAddRelaction($model)
     {
         return $model;
     }
@@ -254,7 +254,7 @@ class AdminCurlController extends AdminBaseController
         $model=$this->addListSearch($model);
         $total = $model->count();
         //是否是否关联数据等操作
-        $model = $this->setModelAddWhere($model);
+        $model = $this->setModelAddRelaction($model);
         $model = $model->skip($offset);
         $model = $this->orderBy($model, $order_by_name, $order_by_type);
         $result = $model->take($pagesize)->get();
