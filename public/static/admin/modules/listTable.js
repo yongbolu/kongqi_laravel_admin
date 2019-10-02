@@ -272,7 +272,7 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
                 btn = $(this).data('btns') || ['确定', '取消'];
 
 
-                var post_index=layer.open({
+                var post_index = layer.open({
                     type: 1
                     ,
                     title: false //不显示标题栏
@@ -341,17 +341,17 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
                 }
             }
 
-            if (value) {
-                req.post(listConfig.edit_field_url, data, function (res) {
-                    layer.msg(res.msg);
-                    if (field == 'sort') {
-                        table.reload('LAY-list-table');
-                    }
-                    //回调
-                    callFun && callFun(res)
-                })
 
-            }
+            req.post(listConfig.edit_field_url, data, function (res) {
+                layer.msg(res.msg);
+                if (field == 'sort') {
+                    table.reload('LAY-list-table');
+                }
+                //回调
+                callFun && callFun(res)
+            })
+
+
 
 
         });
@@ -397,6 +397,46 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
 
 
         });
+    }
+
+    function doHandel(callFun) {
+        var checkStatus = table.checkStatus('LAY-list-table'),
+            checkData = checkStatus.data; //得到选中的数据
+
+        if (checkData.length === 0) {
+            return layer.msg('请选择数据');
+        }
+        var field = $(this).data('field');
+        var value = $(this).data('value') ;
+        console.log($(this).data());
+        layer.confirm('确定批量操作吗？', function (index) {
+
+            //获得id
+            id = new Array();
+            for (i in checkData) {
+                id.push(checkData[i]['id']);
+            }
+
+
+
+            //ajax操作
+            var data = {
+                field: field,
+                field_value: value,
+                ids: id.join(',')
+            };
+            req.post(listConfig.edit_field_url, data, function (res) {
+                layer.msg(res.msg);
+                if (res.code == 200) {
+                    table.reload('LAY-list-table');
+                    layer.close(index); //关闭弹层
+                    callFun && callFun(res)
+                }
+            })
+
+        });
+
+
     }
 
     /**
@@ -451,7 +491,8 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
             all_del: topDel,
             add: topAdd,
             diy_add: topCreate,
-            import: importHandle
+            import: importHandle,
+            handel:doHandel
         };
         $('.layui-btn.kongqi-handel').on('click', function () {
             var type = $(this).data('type');
@@ -468,6 +509,7 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
         form.on('submit(LAY-list-search)', function (data) {
             console.log(data);
             var field = data.field;
+            // field.page=1;
             console.log(field);
             //执行重载
             table.reload('LAY-list-table', {
@@ -481,8 +523,8 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
     form.on('switch(table-checked)', function (obj) {
 
         var field = $(this).data('field');
-        var true_value=$(this).data('true_value') || 1;
-        var false_value=$(this).data('false_value') || 0;
+        var true_value = $(this).data('true_value') || 1;
+        var false_value = $(this).data('false_value') || 0;
         var value = obj.elem.checked ? true_value : false_value;
         var id = $(this).data('id');
         field = field || 'is_checked';

@@ -102,14 +102,14 @@
             value = value || 1;
             text = text || '是|否';
             true_value = true_value || 1;
-            false_value = false_value || 2;
+            false_value = false_value || 0;
             return '<input type="checkbox" data-true="' + true_value + '" data-false_value="' + false_value + '"  lay-skin="switch" lay-text="' + text + '" lay-filter="table-checked" ' +
                 'value="' + d[field] + '" data-id="' + d.id + '"  data-field="' + field + '" ' + (d[field] == value ? 'checked' : '') + '>';
         }
 
         function layui_pic(img) {
             if (img) {
-                return ' <img lay-event="show_img" style="" src="' + img + '">';
+                return ' <img lay-event="show_img" style="height:70px;" src="' + img + '">';
             }
         }
 
