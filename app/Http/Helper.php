@@ -156,6 +156,7 @@ function picurl($str, $thumb = 'thumb')
  */
 function config_cache($config_key, $group_type = 'config', $data = [])
 {
+
     $param = explode('.', $config_key);
     if (empty($param)) {
         return false;
@@ -163,20 +164,21 @@ function config_cache($config_key, $group_type = 'config', $data = [])
 
     if (empty($data)) {
         $config = cache($param[0]);
+
         //是否存在这个缓存
-        if (empty($config)) {
-            return false;
-        }
-        $config = unserialize($config);
-        if (empty($config)) {
+        if (!empty($config)) {
+            $config = ($config);
+        }else
+        {
             //缓存文件不存在就读取数据库
             $res = \App\Models\Config::get()->toArray();
+            $config=[];
             if ($res) {
                 foreach ($res as $k => $val) {
                     $config[$val['ename']] = $val['content'];
                 }
                 //存入缓存
-                \Illuminate\Support\Facades\Cache::forever($param[0], serialize($config));
+                \Illuminate\Support\Facades\Cache::forever($param[0], ($config));
             }
         }
 
@@ -227,7 +229,7 @@ function config_cache($config_key, $group_type = 'config', $data = [])
             \App\Models\Config::insert($newArr);
             $newData = $data;
         }
-        $newData = serialize($newData);
+        $newData = ($newData);
         \Illuminate\Support\Facades\Cache::forever($param[0], $newData);
     }
 }
@@ -412,6 +414,8 @@ function nroute($name, $para = [])
     }
 }
 
+
+
 /**
  * 插件控制器地址
  * @param $path
@@ -546,6 +550,68 @@ function plugin_cache_forever_update(){
     //永久写入缓存
     cache()->forever($plugin_key,$data);
 
+}
+
+/**
+ * 判断是否手机端
+ * @return bool
+ */
+function is_mobile_client()
+{
+// 如果有HTTP_X_WAP_PROFILE则一定是移动设备
+    if (isset ($_SERVER['HTTP_X_WAP_PROFILE'])) {
+        return true;
+    }
+    // 判断手机发送的客户端标志,兼容性有待提高,把常见的类型放到前面
+    if (isset ($_SERVER['HTTP_USER_AGENT'])) {
+        $clientkeywords = [
+            'android',
+            'iphone',
+            'samsung',
+            'ucweb',
+            'wap',
+            'mobile',
+            'nokia',
+            'sony',
+            'ericsson',
+            'mot',
+            'htc',
+            'sgh',
+            'lg',
+            'sharp',
+            'sie-',
+            'philips',
+            'panasonic',
+            'alcatel',
+            'lenovo',
+            'ipod',
+            'blackberry',
+            'meizu',
+            'netfront',
+            'symbian',
+            'windowsce',
+            'palm',
+            'operamini',
+            'operamobi',
+            'openwave',
+            'nexusone',
+            'cldc',
+            'midp'
+        ];
+        // 从HTTP_USER_AGENT中查找手机浏览器的关键字
+        if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))) {
+            return true;
+        }
+    }
+    // 协议法，因为有可能不准确，放到最后判断
+    if (isset ($_SERVER['HTTP_ACCEPT'])) {
+        // 如果只支持wml并且不支持html那一定是移动设备
+        // 如果支持wml和html但是wml在html之前则是移动设备
+        if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**

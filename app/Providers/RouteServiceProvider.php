@@ -79,7 +79,7 @@ class RouteServiceProvider extends ServiceProvider
             if(file_exists($route_path))
             {
                 //后台增加路由前缀命名为admin.plugin.
-                $this->addRoute($route_path,$v['ename'],'admin.plugin.'.strtolower($v['ename']).'.','admin/plugin');
+                $this->addRoute($route_path,$v['ename'],'admin.plugin.'.strtolower($v['ename']).'.','admin/plugin/'.strtolower($v['ename']).'/');
             }
             $route_path=$plugin_path.$v['ename'].'/helper.php';
             if(file_exists($route_path))
