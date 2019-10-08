@@ -16,7 +16,7 @@ class CreateConfigsTable extends Migration
         Schema::create('configs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('group_type')->index()->default('config')->comment('分组');
-            $table->string('ename', 50)->unique()->comment('调用英文名');
+            $table->string('ename', 50)->comment('调用英文名');
             $table->text('content')->nullable()->comment('值');
             $table->timestamps();
         });
