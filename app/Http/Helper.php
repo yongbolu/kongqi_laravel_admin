@@ -184,8 +184,7 @@ function config_cache($config_key, $group_type = 'config', $data = [])
             }
 
             if (count($param) > 0) {
-                dump($param);
-                dump($config);
+
                 //判断获取值参数是否存在，如果存在的话，则去，没有存在返回数组
                 if (isset($param[1])) {
                     $config = is_array($config) ? $config : [];
