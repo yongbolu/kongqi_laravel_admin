@@ -156,82 +156,90 @@ function picurl($str, $thumb = 'thumb')
  */
 function config_cache($config_key, $group_type = 'config', $data = [])
 {
+    try{
+        $param = explode('.', $config_key);
+        if (empty($param)) {
+            return false;
+        }
 
-    $param = explode('.', $config_key);
-    if (empty($param)) {
+        if (empty($data)) {
+            $config = cache($param[0]);
+
+
+            //是否存在这个缓存
+            if (!empty($config)) {
+                $config = ($config);
+            }else
+            {
+                //缓存文件不存在就读取数据库
+                $res = \App\Models\Config::where('group_type',$param[0])->get()->toArray();
+                $config=[];
+                if ($res) {
+                    foreach ($res as $k => $val) {
+                        $config[$val['ename']] = $val['content'];
+                    }
+                    //存入缓存
+                    \Illuminate\Support\Facades\Cache::forever($param[0], ($config));
+                }
+            }
+
+            if (count($param) > 0) {
+                dump($param);
+                dump($config);
+                //判断获取值参数是否存在，如果存在的话，则去，没有存在返回数组
+                if (isset($param[1])) {
+                    $config = is_array($config) ? $config : [];
+                    if (array_key_exists($param[1], $config)) {
+                        return $config[$param[1]];
+                    }
+                } else {
+                    return $config = is_array($config) ? $config : false;
+                }
+            } else {
+                return $config;
+            }
+        } else {
+            //添加/更新
+            $newArr = [];
+            $newData = [];
+            $result = \App\Models\Config::where('group_type',$group_type)->get()->toArray();
+            if (count($result) > 0) {
+
+                foreach ($result as $val) {
+                    $temp[$val['ename']] = $val['content'];
+                }
+                foreach ($data as $k => $v) {
+                    $newArr = ['ename' => $k, 'content' => trim($v), 'group_type' => $group_type];
+                    if (!isset($temp[$k])) {
+
+                        \App\Models\Config::create($newArr);//新key数据插入数据库
+                    } else {
+                        if ($v != $temp[$k]) {
+                            \App\Models\Config::where("ename", $k)->update($newArr);//缓存key存在且值有变更新此项
+                        }
+
+                    }
+                }
+                //更新后的新的记录
+                $newRes = \App\Models\Config::where('group_type',$group_type)->toArray();
+                foreach ($newRes as $rs) {
+                    $newData[$rs['ename']] = $rs['content'];
+                }
+            } else {
+                foreach ($data as $k => $v) {
+                    $newArr[] = ['ename' => $k, 'content' => trim($v), 'group_type' => $group_type];
+                }
+                \App\Models\Config::insert($newArr);
+                $newData = $data;
+            }
+            $newData = ($newData);
+            \Illuminate\Support\Facades\Cache::forever($param[0], $newData);
+        }
+    }catch (Exception $exception)
+    {
         return false;
     }
 
-    if (empty($data)) {
-        $config = cache($param[0]);
-
-        //是否存在这个缓存
-        if (!empty($config)) {
-            $config = ($config);
-        }else
-        {
-            //缓存文件不存在就读取数据库
-            $res = \App\Models\Config::get()->toArray();
-            $config=[];
-            if ($res) {
-                foreach ($res as $k => $val) {
-                    $config[$val['ename']] = $val['content'];
-                }
-                //存入缓存
-                \Illuminate\Support\Facades\Cache::forever($param[0], ($config));
-            }
-        }
-
-        if (count($param) > 0) {
-            //判断获取值参数是否存在，如果存在的话，则去，没有存在返回数组
-            if (isset($param[1])) {
-                $config = is_array($config) ? $config : [];
-                if (array_key_exists($param[1], $config)) {
-                    return $config[$param[1]];
-                }
-            } else {
-                return $config = is_array($config) ? $config : false;
-            }
-        } else {
-            return $config;
-        }
-    } else {
-        //添加/更新
-        $newArr = [];
-        $newData = [];
-        $result = \App\Models\Config::get()->toArray();
-        if (count($result) > 0) {
-
-            foreach ($result as $val) {
-                $temp[$val['ename']] = $val['content'];
-            }
-            foreach ($data as $k => $v) {
-                $newArr = ['ename' => $k, 'content' => trim($v), 'group_type' => $group_type];
-                if (!isset($temp[$k])) {
-
-                    \App\Models\Config::create($newArr);//新key数据插入数据库
-                } else {
-                    if ($v != $temp[$k]) {
-                        \App\Models\Config::where("ename", $k)->update($newArr);//缓存key存在且值有变更新此项
-                    }
-
-                }
-            }
-            //更新后的新的记录
-            $newRes = \App\Models\Config::get()->toArray();
-            foreach ($newRes as $rs) {
-                $newData[$rs['ename']] = $rs['content'];
-            }
-        } else {
-            foreach ($data as $k => $v) {
-                $newArr[] = ['ename' => $k, 'content' => trim($v), 'group_type' => $group_type];
-            }
-            \App\Models\Config::insert($newArr);
-            $newData = $data;
-        }
-        $newData = ($newData);
-        \Illuminate\Support\Facades\Cache::forever($param[0], $newData);
-    }
 }
 
 /**
