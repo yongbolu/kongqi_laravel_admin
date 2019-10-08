@@ -11,6 +11,7 @@
         var simplemde = new SimpleMDE({
             element: document.getElementById(Obj),
             spellChecker: false,
+            forceSync:true,//同步textare
             autosave: {
                 enabled: true,
                 uniqueId: cacheName,
