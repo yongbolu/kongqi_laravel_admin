@@ -156,6 +156,7 @@ function picurl($str, $thumb = 'thumb')
  */
 function config_cache($config_key, $group_type = 'config', $data = [])
 {
+
     try{
         $param = explode('.', $config_key);
         if (empty($param)) {
@@ -202,6 +203,7 @@ function config_cache($config_key, $group_type = 'config', $data = [])
             $newArr = [];
             $newData = [];
             $result = \App\Models\Config::where('group_type',$group_type)->get()->toArray();
+
             if (count($result) > 0) {
 
                 foreach ($result as $val) {
@@ -219,15 +221,19 @@ function config_cache($config_key, $group_type = 'config', $data = [])
 
                     }
                 }
+
                 //更新后的新的记录
-                $newRes = \App\Models\Config::where('group_type',$group_type)->toArray();
+                $newRes = \App\Models\Config::where('group_type',$group_type)->get()->toArray();
+
                 foreach ($newRes as $rs) {
                     $newData[$rs['ename']] = $rs['content'];
                 }
             } else {
+
                 foreach ($data as $k => $v) {
                     $newArr[] = ['ename' => $k, 'content' => trim($v), 'group_type' => $group_type];
                 }
+
                 \App\Models\Config::insert($newArr);
                 $newData = $data;
             }
