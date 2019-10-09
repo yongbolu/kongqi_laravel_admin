@@ -6,14 +6,13 @@
 QQ:531833998  
 QQ群：650547109  欢迎交流，也欢迎定制系统，全职在家提供技术。
 
-后台演示地址 http://laravel.kongqikeji.com/admin  
+系统地址 http://laravel.kongqikeji.com/  
+详细文档地址 http://laravel.kongqikeji.com/docs.html
+后台演示地址 http://adlaravel.kongqikeji.com/admin  
 账号:kongqi
 密码:kongqi1688
 
-### 更新日志
-- 2019-09-25 增加插件附加搜索Service操作
-- 2019-09-23 增加插件注册 Relation::morphMap关系
-插件目录下，创建1个relation.php，键值对写完即可
+
 ```
 <?php
 
@@ -151,7 +150,7 @@ http://www.xx.com/admin
 安装完成
 
 ### 插件库地址
-https://github.com/kong-qi/kongqi-laravel-admin-plugin
+http://fuwu.kongqikeji.com/
 
 ### 无插件版本，精简版本
 https://github.com/kong-qi/kongqi_laravel_admin_no_plugin.git ，其他都一样去除了插件加载
