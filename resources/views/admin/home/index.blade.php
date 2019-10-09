@@ -26,7 +26,7 @@
             <!-- 主体内容 -->
                 <div class="layui-body" id="LAY_app_body">
                     <div class="layadmin-tabsbody-item layui-show">
-                        <iframe src="{{ admin_url('Home','console') }}" frameborder="0"
+                        <iframe src="{{ admin_url('Home','console') }}" frameborder="0" width="100%" style="width: 100%"
                                 class="layadmin-iframe"></iframe>
                     </div>
                 </div>
