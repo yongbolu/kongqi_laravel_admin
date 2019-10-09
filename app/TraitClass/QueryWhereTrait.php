@@ -32,6 +32,16 @@ trait  QueryWhereTrait
         ];
         $this->addWhere($data);
     }
+    public function whereByGroupType($value)
+    {
+        $data = [
+            'group_type' => [
+                'type' => '=',
+                'value' => $value
+            ]
+        ];
+        $this->addWhere($data);
+    }
 
     public function whereByModelType($value)
     {

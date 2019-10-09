@@ -35,7 +35,7 @@ trait RouteTrait
         $data['controller'] = '\\' . $route_arr[0];
         $data['controller_base_lower']=$this->toBlade($data['controller_base']);
 
-        //dump($data);
+       //dump($data);
 
         $this->route=$data;
         return $data;

@@ -7,7 +7,7 @@
 
     var g_icon_url = '{{ admin_url('Icon','index') }}';
     layui.config({
-        version: "{{ env('APP_DEBUG')?time():'v1' }}",
+        version: "{{ env('APP_DEBUG')?time():'v1.6' }}",
         debug: false,
         base: '{{ ___("/admin") }}/' //静态资源所在路径
     }).extend({

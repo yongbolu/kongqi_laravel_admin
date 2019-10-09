@@ -6,17 +6,17 @@
 <script src="{{ ___('admin/js/simple/codemirror-4.inline-attachment.js') }}"></script>
 <link rel="stylesheet" href="{{ ___('icon/fa/css/font-awesome.css') }}">
 <script>
-    function simple_markdown(Obj, cacheName) {
+    function simple_markdown(Obj, cacheName,Cobj) {
         var cacheName = cacheName || 'MyUniqueID';
         var simplemde = new SimpleMDE({
             element: document.getElementById(Obj),
             spellChecker: false,
-            forceSync:true,//同步textare
-            autosave: {
+            forceSync:true,
+          /*  autosave: {
                 enabled: true,
                 uniqueId: cacheName,
                 delay: 1000,
-            },
+            },*/
             renderingConfig: {
                 singleLineBreaks: false,
                 codeSyntaxHighlighting: true,
@@ -199,7 +199,17 @@
                     className: "fa fa-paragraph no-disable no-mobile",
                     title: "插入分页",
                     default: true
-                },
+                }/*,
+                {
+                    name: "page",
+                    action: function (editor) {
+                        var a=editor.options.previewRender(editor.value());
+                        console.log(a);
+                    },
+                    className: "fa fa-paragraph no-disable no-mobile",
+                    title: "取得",
+                    default: true
+                },*/
             ]
         });
         //默认看起预览
@@ -216,7 +226,17 @@
             }
         };
         inlineAttachment.editors.codemirror4.attach(simplemde.codemirror, inlineAttachmentConfig);
-
+        Cobj=Cobj || "#content";
+        //监听内容变化
+        simplemde.codemirror.on("change", function(){
+            //console.log('我变化了')
+            $(Cobj).val(simplemde.options.previewRender(simplemde.value()));
+        });
+        //如果开始有内容就要初始化内容
+        if(simplemde.value())
+        {
+            $(Cobj).val(simplemde.options.previewRender(simplemde.value()));
+        }
         return simplemde;
 
     }

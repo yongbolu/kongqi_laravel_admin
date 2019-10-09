@@ -35,6 +35,7 @@ trait BladeTrait
     {
         $route_info = $this->routeInfo;
         $controller=$this->toModelBlade($route_info['controller_base']) . '.' ;
+
         $view_name ? $this->bladeView =$this->toModelBlade($this->module). '.' .$controller . $view_name : '';
     }
 

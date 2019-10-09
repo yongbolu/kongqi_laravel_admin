@@ -342,14 +342,14 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
             }
 
 
-            req.post(listConfig.edit_field_url, data, function (res) {
-                layer.msg(res.msg);
-                if (field == 'sort') {
-                    table.reload('LAY-list-table');
-                }
-                //回调
-                callFun && callFun(res)
-            })
+                req.post(listConfig.edit_field_url, data, function (res) {
+                    layer.msg(res.msg);
+                    if (field == 'sort') {
+                        table.reload('LAY-list-table');
+                    }
+                    //回调
+                    callFun && callFun(res)
+                })
 
 
 
@@ -509,7 +509,7 @@ layui.define(['table', 'form', 'request', 'layerOpen', 'laypage', 'layer', 'layd
         form.on('submit(LAY-list-search)', function (data) {
             console.log(data);
             var field = data.field;
-            // field.page=1;
+           // field.page=1;
             console.log(field);
             //执行重载
             table.reload('LAY-list-table', {

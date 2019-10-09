@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 trait ModelCurlTrait
 {
-    use ApiTrait;
+    use ApiTrait, CheckFormTrait;
     public $checkErrorSuffix = "<br/>";//输出验证表单的后缀连接符
     public $model;//模型
     public $timeType = '';//搜索字段时间字段/类型
@@ -25,6 +25,7 @@ trait ModelCurlTrait
     public $modelInsertId;//最后插入的ID
     public $pageName = '';//页面名字
     public $saveOutStr = '';//保存/创建的自定义输出字符串
+
 
     /**
      * 创建和编辑公用数据
@@ -230,57 +231,6 @@ trait ModelCurlTrait
 
 
     /**
-     * 组定义验证验证表单
-     * @param $request_data 来源数据
-     * @param $check_data 验证规则
-     * @param $message_data 验证规则对应提示
-     * @param array $filed_name_data 全局字段名字对应关系名字
-     * @return array 如果空数组，则表示无错误，
-     */
-    protected function checkForm($request_data, $check_data, $message_data = [], $filed_name_data = [])
-    {
-        $validator = Validator::make($request_data, $check_data, $message_data, $filed_name_data);
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
-
-        return [];
-    }
-
-    /**
-     * 错误输出表单转换格式
-     * @param $error
-     * @return array|\Illuminate\Http\JsonResponse
-     */
-    protected function checkFormErrorFormat($error)
-    {
-        $error = $error->all();
-        if (empty($error)) {
-            return [];
-        }
-        $error_str = '';
-        $error_arr = [];
-        foreach ($error as $k => $v) {
-
-            $error_str .= $v . "*" . $this->formErrorSuffix();
-            $error_arr[] = $v;
-
-        }
-        return (['msg' => $error_str, 'data' => $error_arr, 'code' => 55]);
-
-    }
-
-
-    /**
-     * 表单验证错误的后缀连接符
-     * @return string
-     */
-    public function formErrorSuffix()
-    {
-        return $this->checkErrorSuffix;
-    }
-
-    /**
      * 设置模型
      * @param $model
      * @return mixed
@@ -380,11 +330,13 @@ trait ModelCurlTrait
     {
         return view()->share($data);
     }
+
     /**
      * 批量操作
      * @return mixed
      */
-    public function allCreate(Request $request){
+    public function allCreate(Request $request)
+    {
 
         return $this->display($this->createEditData());
     }
@@ -417,7 +369,7 @@ trait ModelCurlTrait
         }
         $r = $this->getModel()->insert($post_data);
         if ($r) {
-            $this->afterAllCreateEvent();
+            $this->afterAllCreateEvent();//批量添加成功之后的事件
             $this->insertLog('批量插入成功');
             return $this->returnOkApi($this->pageName . '批量插入成功');
         }
@@ -442,64 +394,53 @@ trait ModelCurlTrait
      */
     public function importPost(Request $request)
     {
-        $is_del=$request->input('del');
+        $is_del = $request->input('del');
         $file = linux_path(public_path()) . ($request->input('excel'));
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
 
         $worksheet = $spreadsheet->getActiveSheet();
         $sheetdata = $worksheet->toArray();
         //进行批量插入
-        if(empty($sheetdata)){
+        if (empty($sheetdata)) {
             return $this->returnErrorApi('没有数据');
         }
-        $title_data=$sheetdata[0];
-        $insert_data=[];
-        if(!isset($sheetdata[1]))
-        {
+        $title_data = $sheetdata[0];
+        $insert_data = [];
+        if (!isset($sheetdata[1])) {
             return $this->returnErrorApi('没有数据');
         }
-        $data=$sheetdata;
+        $data = $sheetdata;
         unset($data[0]);
-        try{
-            foreach ($data as $k=>$v)
-            {
-                foreach ($v as $sk=>$sv)
-                {
-                    $insert_data[$k][$title_data[$sk]]=$sv;
+        try {
+            foreach ($data as $k => $v) {
+                foreach ($v as $sk => $sv) {
+                    $insert_data[$k][$title_data[$sk]] = $sv;
                 }
             }
 
-        }catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             return $this->returnErrorApi('数据异常');
         }
-        if(empty($insert_data))
-        {
+        if (empty($insert_data)) {
             return $this->returnErrorApi('没有数据插入');
         }
-        if($is_del)
-        {
+        if ($is_del) {
 
-            $this->model->where('id','!=',0)->delete();
+            $this->model->where('id', '!=', 0)->delete();
         }
 
-        try{
-            $r=$this->model->insert($insert_data);
-            if($r)
-            {
+        try {
+            $r = $this->model->insert($insert_data);
+            if ($r) {
                 return $this->returnOkApi('导入成功');
-                $this->insertLog($this->pageName.'导入成功');
+                $this->insertLog($this->pageName . '导入成功');
             }
-            $this->insertLog($this->pageName.'导入失败');
+            $this->insertLog($this->pageName . '导入失败');
             return $this->returnErrorApi('导入失败');
 
-        }catch (\Exception $exception)
-        {
-            return $this->returnErrorApi('数据异常,请重新上传表格数据或自检'.$exception->getMessage());
+        } catch (\Exception $exception) {
+            return $this->returnErrorApi('数据异常,请重新上传表格数据或自检' . $exception->getMessage());
         }
-
-
-
 
     }
 
@@ -520,7 +461,6 @@ trait ModelCurlTrait
                 NULL,
                 'A1'
             );
-
 
         //设置单元格宽度，自动
         $spreadsheet->getActiveSheet()->getDefaultColumnDimension('A')->setWidth(22);
@@ -543,11 +483,40 @@ trait ModelCurlTrait
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
     }
+
     /**
      * 批量添加成功之后的事件
      * 比如更新缓存操作
      */
     public function afterAllCreateEvent()
+    {
+
+    }
+
+    /**
+     * 复制
+     * @param Request $request
+     * @return array|\Illuminate\Http\JsonResponse
+     */
+    public function copy(Request $request)
+    {
+        $id = $request->input('id');
+        $form = $this->model->find($id);
+        $obj = $form->replicate();
+        $r = $obj->save();
+        if ($r) {
+            $this->copyAfter($form,$obj);
+            return $this->returnOkApi('复制成功');
+        }
+        return $this->returnErrorApi('复制失败');
+
+    }
+
+    /**
+     * 拷贝成功之后的操作
+     * @param $show
+     */
+    public function copyAfter($show,$new)
     {
 
     }

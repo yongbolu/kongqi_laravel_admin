@@ -14,6 +14,22 @@ use Illuminate\Support\Facades\Schema;
 
 trait SearchScopeTrait
 {
+    public function scopeSortDesc($query){
+        return $query->orderBy('sort','desc');
+    }
+    public function scopeSortAsc($query){
+        return $query->orderBy('sort','asc');
+    }
+    public function scopeIdDesc($query){
+        return $query->orderBy('id','desc');
+    }
+    public function scopeIdAsc($query){
+        return $query->orderBy('id','asc');
+    }
+    public function scopeChecked($query){
+        //return $query;
+        return $query->where('is_checked',1);
+    }
     /**
      * 范围搜索查询设置
      * @param $query 查询句柄query

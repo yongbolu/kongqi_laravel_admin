@@ -31,13 +31,13 @@
                             @if($item['router'])
                             <a lay-href="{{ $item['router']?nroute($item['router'],isset($item['param'])?$item['param']:[]):'javascript:void(0)' }}"
                                lay-tips="{{ $item['name'] }}" lay-direction="2">
-                                <i class="{{ $item['icon'] }}"></i>
+                                <i class="layui-side-icon {{ $item['icon'] }}"></i>
                                 <cite>{{ $item['name'] }}</cite>
                             </a>
                             @else
                                 <a href="{{ $item['router']?nroute($item['router'],isset($item['param'])?$item['param']:[]):'javascript:void(0)' }}"
                                    lay-tips="{{ $item['name'] }}" lay-direction="2">
-                                    <i class="{{ $item['icon'] }}"></i>
+                                    <i class="layui-side-icon {{ $item['icon'] }}"></i>
                                     <cite>{{ $item['name'] }}</cite>
                                 </a>
                             @endif
@@ -53,7 +53,7 @@
 
                                                 <dd data-name="{{ $sub_v['title'] }}">
                                                     <a lay-href="{{ nroute($sub_v['router'],isset($sub_v['param'])?$sub_v['param']:[]) }}">
-                                                        <i class="{{ $sub_v['icon'] }}"></i> {{ $sub_v['title'] }}</a>
+                                                        <i class="layui-side-icon {{ $sub_v['icon'] }}"></i> {{ $sub_v['title'] }}</a>
                                                 </dd>
 
                                             @endif
