@@ -10,9 +10,9 @@
     <div class="layui-input-block">
 
         <div class="layui-uploads-pic layui-row layui-col-space10" id="{{ md5($data['name']) }}">
-            @if($data['src'])
+            @if($data['value'])
                 @php
-                    $thumbs=json_decode(urldecode($data['src']),1);
+                    $thumbs=json_decode(urldecode($data['value']),1);
 
                 @endphp
                 @if(!empty($thumbs) )
