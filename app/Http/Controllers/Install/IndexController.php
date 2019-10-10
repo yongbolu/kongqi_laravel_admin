@@ -30,7 +30,9 @@ class IndexController extends BaseController
         if ($step) {
             $this->setModelView('step' . $step);
             $method = 'step' . $step;
-            $this->$method();
+            if (!in_array($step ,[4,6])) {
+                $this->$method();
+            }
 
             if ($step == 3) {
                 //判断环境是否有错误，如果有则返回第二步
@@ -40,46 +42,25 @@ class IndexController extends BaseController
 
             }
             if ($step == 4) {
-                //检验数据库
-                try {
-                    $bd_has = DB::select(DB::raw('SHOW DATABASES LIKE "' . $request->input('DB.DB_DATABASE') . '"'));
-                    if (empty($bd_has)) {
-                        return back()->with('message', '数据库不存在');
-                    }
-                } catch (\Exception $exception) {
-                    return back()->with('message', '数据库配置错误，请重写' . $exception->getMessage());
-                }
-                $db_password = $request->input('DB.DB_PASSWORD');
-
-                //判断环境是否有错误，如果有则返回第二步
-                if ($db_password != env('DB_PASSWORD')) {
-                    return back()->with('message', '数据库写入失败，请重试');
-                }
-                //20分钟
-                ini_set('max_execution_time', 60 * 20);
-
-                //执行数据库迁移
-                Artisan::call('migrate');
-                //填充数据
-                Artisan::call('db:seed');
-                //重新生成app key
-                Artisan::call('key:generate');
-                //写入安装文件
-                file_put_contents(linux_path(base_path()) . '/install', date('Y-m-d H:i:s') . ' install');
-                return redirect()->route('kongqi.install', ['step' => 5]);
+                return $this->step4();
+            }
+            if ($step == 6) {
+                return $this->step6();
             }
 
         }
+
         return $this->display(['index' => $step ? $step - 1 : 0]);
     }
 
-    public function test(){
+    public function test()
+    {
         //
-        $a=Schema::table('vote_configs', function (Blueprint $table) {
+        $a = Schema::table('vote_configs', function (Blueprint $table) {
 
 
-            if(Schema::hasColumn('vote_configs','tongji_script2')){
-              return   dump('存在了');
+            if (Schema::hasColumn('vote_configs', 'tongji_script2')) {
+                return dump('存在了');
             }
 
             $table->text('tongji_script2')->nullable()->comment('统计脚本2');
@@ -98,18 +79,49 @@ class IndexController extends BaseController
 
     }
 
+    public function step5()
+    {
+
+    }
+
     public function step4()
     {
         $env_file = linux_path(base_path()) . '/.env';
         $request = request();
         $post_data = $request->all();
-        $env = $this->createEnv($post_data['DB'], $post_data['REDIS'],0);
+        $env = $this->createEnv($post_data['DB'], $post_data['REDIS'], 1);
         file_put_contents($env_file, $env);
+        //跳转到第5步
+        return redirect()->route('kongqi.install', ['step' => 6]);
+
     }
 
-    public function step5()
+    public function step6()
     {
+        //检验数据库
+        try {
+            $bd_has = DB::select(DB::raw('SHOW DATABASES LIKE "' . env('DB_DATABASE') . '"'));
+            if (empty($bd_has)) {
+                return back()->with('message', '数据库不存在');
+            }
+        } catch (\Exception $exception) {
+            return back()->with('message', '数据库配置错误，请重写' . $exception->getMessage());
+        }
+        $db_password = env('DB_PASSWORD');
 
+        //判断环境是否有错误，如果有则返回第二步
+        //20分钟
+        ini_set('max_execution_time', 60 * 20);
+
+        //执行数据库迁移
+        Artisan::call('migrate');
+        //填充数据
+        Artisan::call('db:seed');
+        //重新生成app key
+        Artisan::call('key:generate');
+        //写入安装文件
+        file_put_contents(linux_path(base_path()) . '/install', date('Y-m-d H:i:s') . ' install');
+        return redirect()->route('kongqi.install', ['step' => 5]);
     }
 
     public function createEnv($db, $redis, $debug = 0, $app_key = "")
