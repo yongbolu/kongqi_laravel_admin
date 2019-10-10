@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,29 +29,35 @@ class AppServiceProvider extends ServiceProvider
         $relation=[
             'admin' => 'App\Models\Admin'
         ];
-        //取得安装插件
-        $plugin=get_plugins_data();
+        try{
 
-        //取得插件目录
-        $plugin_path = get_plugin_path();
-
-        if(!empty($plugin))
+        }catch (\Exception $exception)
         {
+            //取得安装插件
+            $plugin=get_plugins_data();
 
-            foreach ($plugin as $k=>$v) {
+            //取得插件目录
+            $plugin_path = get_plugin_path();
 
-                $route_path = $plugin_path . $v['ename'] . '/relation.php';
+            if(!empty($plugin))
+            {
 
-                if(file_exists($route_path))
-                {
-                    $plugin_reation=require_once $route_path;
+                foreach ($plugin as $k=>$v) {
 
-                    $relation=array_merge($relation,$plugin_reation);
+                    $route_path = $plugin_path . $v['ename'] . '/relation.php';
+
+                    if(file_exists($route_path))
+                    {
+                        $plugin_reation=require_once $route_path;
+
+                        $relation=array_merge($relation,$plugin_reation);
+                    }
+
                 }
 
             }
-
         }
+
         //去掉重复
         $relation=array_unique($relation);
 
