@@ -75,7 +75,7 @@
         <div class="layui-card">
             <div class="layui-card-header">插件</div>
             <div class="layui-card-body layui-text">
-                <iframe src="//fuwu.kongqikeji.com/" height="400" frameborder="0" width="100%"></iframe>
+                <iframe src="//market.kongqikeji.com/" height="400" frameborder="0" width="100%"></iframe>
             </div>
         </div>
     </div>
