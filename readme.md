@@ -37,7 +37,18 @@ return [
 
 - PHP7.2以上版本
 - Laravel 6.0,低于这个版本也可以，但不能低于5.2版本
+### 新增
+- 2019-10-13 新增artisan 命令建立模块
+```
+php artisan plugin //按提示完成，后面修改下配置即可
+```
+- 2019-10-13 新增artisan 命令建立模块 模型
 
+```
+php artisan plugin:model [插件模块标识符] [模型名字]
+//例如
+php artisan plugin:model Forum PnForumCategory
+```
 ## 安装
 
 第一步：拉取代码
