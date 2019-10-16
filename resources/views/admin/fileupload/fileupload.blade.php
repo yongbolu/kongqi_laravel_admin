@@ -8,13 +8,13 @@
 @endsection
 @section('content')
     @php
-    $open_file=request()->input('open_file',0);
+        $open_file=request()->input('open_file',0);
     @endphp
     <div class="m-10">
         <div class="layui-row layui-col-space10">
 
             <div class="layui-col-xs12">
-                <div class="layui-tab layui-tab-brief">
+                <div class="layui-tab layui-tab-brief" lay-filter="upload">
                     <ul class="layui-tab-title">
                         <li class="{{$open_file?'':'layui-this'}}">上传</li>
                         <li class="{{$open_file?'layui-this':''}}">文件库</li>
@@ -24,7 +24,7 @@
                         <div class="layui-tab-item {{$open_file?'':'layui-show'}} upload-tuku-area">
                             <div class="layui-uploads-pic ">
                                 <div class=" ">
-                                    <a class="pic-add" id="upload-area" href="javascript:void(0)" data-type="image"
+                                    <a class="pic-add" id="upload-area" href="javascript:void(0)" data-type="{{ request()->input('type','image') }}"
                                        data-screen_type=""
                                        title="点击上传"></a>
 
@@ -81,15 +81,37 @@
 @endsection
 @section('foot_js')
     <script>
+        var open_file="{{ request()->input('open_file',0) }}";
         var is_more = "{{ request()->input('is_more',0) }}"
-        layui.use(['index', 'listTable', 'request', 'layer','uploader'], function () {
-
+        layui.use(['index', 'listTable', 'request', 'layer', 'uploader', 'element'], function () {
+            var element = layui.element;
             var listTable = layui.listTable;
             var req = layui.request;
             var $ = layui.$;
             var layer = layui.layer;
             var form = layui.form;
-            listTable.diy_list(".tuku-list", "{!!  admin_url('FileUpload','handle',['type'=>'api','uptype'=>request()->input('type'),'screen'=>request()->input('screen')])  !!}", {'limit': 20});
+            var is_loading_list=0;
+
+            element.on('tab(upload)', function (data) {
+
+                console.log(data.index); //得到当前Tab的所在下标
+                if (data.index == 1) {
+                    if(!is_loading_list)
+                    {
+                        listTable.diy_list(".tuku-list", "{!!  admin_url('FileUpload','handle',['type'=>'api','uptype'=>request()->input('type'),'screen'=>request()->input('screen')])  !!}", {'limit': 20});
+                        is_loading_list=1;
+                    }
+
+                }
+
+            });
+            //如果打开文件，需要执行AJAX请求
+            if(open_file)
+            {
+                listTable.diy_list(".tuku-list", "{!!  admin_url('FileUpload','handle',['type'=>'api','uptype'=>request()->input('type'),'screen'=>request()->input('screen')])  !!}", {'limit': 20});
+                is_loading_list=1;
+            }
+
             $(document).on('click', ".upload-item-more", function () {
 
                 if (is_more == 1) {
@@ -104,7 +126,7 @@
             var uploader = layui.uploader;
             var uploadObj;
 
-            uploadObj=uploader.list_upload("#upload-area");
+            uploadObj = uploader.list_upload("#upload-area");
 
             //添加分组
             form.on('submit(addGroup)', function (data) {
@@ -114,8 +136,8 @@
                     if (res.code == 200) {
                         getGroup(res.data);
                         //修改分组
-                        uploadObj.config.data.group_id=res.data;
-                        $("#upload-area").attr('group_id',res.data);
+                        uploadObj.config.data.group_id = res.data;
+                        $("#upload-area").attr('group_id', res.data);
                         $(".upload-categor-form").toggleClass('layui-hide');
                     } else {
 
@@ -125,11 +147,11 @@
 
             });
 
-            form.on('select(listGroup)', function(data){
+            form.on('select(listGroup)', function (data) {
 
-                $("#upload-area").attr('group_id',data.value);
-               //修改分组
-                uploadObj.config.data.group_id=data.value;
+                $("#upload-area").attr('group_id', data.value);
+                //修改分组
+                uploadObj.config.data.group_id = data.value;
 
             });
             getGroup();
@@ -163,9 +185,6 @@
             $(".js-add").click(function () {
                 $(".upload-categor-form").toggleClass('layui-hide');
             })
-
-
-
 
 
         })
