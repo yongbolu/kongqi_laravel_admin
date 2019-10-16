@@ -111,6 +111,54 @@ trait SearchScopeTrait
         return $data;
 
     }
+    /**
+     * 搜索数组
+     * @param $query
+     * @param $where
+     * @param $field
+     * @return bool
+     */
+    public function scopeSearchArr($query,$where,$field){
+        if($where=='')
+        {
+            return false;
+        }
+        if(is_array($where))
+        {
+            return $query->whereIn($field,$where);
+        }
+        if(is_string($where))
+        {
+            return $query->where($field,$where);
+        }
+    }
+
+    /**
+     * 搜索like模糊搜索
+     * @param $query
+     * @param $where
+     * @param string $prefix
+     * @return bool
+     */
+    public function scopeSearchLike($query,$where,$prefix='or'){
+        if(empty($where) || is_string($where))
+        {
+            return false;
+        }
+        $where_arr=[];
+        $sql='';
+        foreach ($where as $k=>$v)
+        {
+            $sql=" $k like ? ".$prefix;
+            $where_arr[]='%'.$v.'%';
+        }
+        $sql=substr($sql,0,-3);
+        if(!empty($where_arr))
+        {
+            return $query->whereRaw($sql,$where_arr);
+        }
+
+    }
 
 
 }

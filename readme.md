@@ -38,6 +38,20 @@ return [
 - PHP7.2以上版本
 - Laravel 6.0,低于这个版本也可以，但不能低于5.2版本
 ### 新增
+- 2019-10-136 新增scope搜索数组条件
+```
+public function scopeSearchArr($query,$where,$field){}
+//使用
+$where=[1,2,3];或字符串$where='1';
+$model->searchArr($where,'id')
+
+public function scopeSearchLike($query,$where,$prefix='or'){
+}
+//使用
+//使用
+$where=['name'=>'小明','sex'=>1];//最后执行sql如 name like '%小明%' or sex like '%1%' 
+$model->searchLike($where)
+```
 - 2019-10-13 新增artisan 命令建立模块
 ```
 php artisan plugin //按提示完成，后面修改下配置即可

@@ -120,7 +120,7 @@ class CreatePlugin extends Command
         $r=file_put_contents($plugin_dir.'Services/Services.php',$service);
         if(!$r)
         {
-            return $this->info($plugin_dir."Services/Services.php：文件创建失败");
+            return $this->info($plugin_dir."Services/SearchService.php：文件创建失败");
         }
         //创建配置文件
         $tips = $this->ask('请输入插件名称?');
