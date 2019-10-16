@@ -281,6 +281,7 @@ class BaseDefaultController extends BaseController
 
         $r = $this->model->whereIn($type_id, $id_arr)->delete();
         if ($r) {
+            $this->deleteAfter($id_arr);
             $this->insertLog($this->pageName . '成功删除ids：' . implode(',', $id_arr));
             return $this->returnOkApi('删除成功');
         }

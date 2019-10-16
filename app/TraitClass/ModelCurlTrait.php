@@ -520,4 +520,10 @@ trait ModelCurlTrait
     {
 
     }
+    /**
+     * 删除之后的事件
+     */
+    public function deleteAfter($id_arr){
+
+    }
 }
