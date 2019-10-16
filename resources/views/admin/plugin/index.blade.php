@@ -45,7 +45,7 @@
 
                     }
                 }
-                , {title: '操作', width: 150, align: 'center', toolbar: '#tpl-create-edit'}
+                , {title: '操作', width: 200, align: 'center', toolbar: '#tpl-create-edit'}
             ]]
             //渲染
             listTable.render(listConfig.index_url, cols);

@@ -47,7 +47,7 @@
                     {field: 'cn_name', minWidth: 200, title: '名称'},
                     {field: 'name', title: '路由',edit:1},
 
-                    {title: '操作', width: 150, align: 'center', toolbar: '#tpl-create-edit'}
+                    {title: '操作', width: 200, align: 'center', toolbar: '#tpl-create-edit'}
                 ]],
 
                 done: function () {

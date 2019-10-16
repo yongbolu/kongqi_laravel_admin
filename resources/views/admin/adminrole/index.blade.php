@@ -21,7 +21,7 @@
                 , {field: 'cn_name', title: '角色'}
                 , {field: 'name', title: '标识符'}
                 , {field: 'mark', title: '说明'}
-                , {title: '操作', width: 150, align: 'center', toolbar: '#tpl-create-edit'}
+                , {title: '操作', width: 200, align: 'center', toolbar: '#tpl-create-edit'}
             ]]
             //渲染
             listTable.render(listConfig.index_url, cols);
