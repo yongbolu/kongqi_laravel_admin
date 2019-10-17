@@ -1,5 +1,5 @@
 <div class="layui-form-item">
-   @include('admin.tpl.form.label',['data'=>$data])
+    @include('plugin.tpl.form.label',['data'=>$data])
     <div class="layui-input-block">
         <select name="{{ $data['name'] }}"
                 lay-filter="{{ $data['filter']??'' }}"
@@ -8,10 +8,18 @@
                 {{ $data['search']??"lay-search" }}>
             <option value="">直接选择或搜索选择</option>
             @if(!empty($data['list']))
-                @foreach ($data['list']['data'] as $v)
-                    <option {{ $data['on_id']==$v['id']?'selected':'' }} value="{{ $v['id'] }}">{{ $v['name'] }}</option>
+                @if(isset($data['list']['type']) && $data['list']['type']=='key_value')
+                    @foreach ($data['list']['data'] as $k=>$v)
+                        <option {{ $data['on_id']==$k?'selected':'' }} value="{{ $k }}">{{ $v }}</option>
 
-                @endforeach
+                    @endforeach
+                @else
+                    @foreach ($data['list']['data'] as $v)
+                        <option {{ $data['on_id']==$v['id']?'selected':'' }} value="{{ $v['id'] }}">{{ $v['name'] }}</option>
+
+                    @endforeach
+                @endif
+
             @endif
         </select>
     </div>
